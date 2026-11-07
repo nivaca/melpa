@@ -1,0 +1,4 @@
+(empv
+ :fetcher github
+ :repo "isamert/empv.el"
+ :files (:defaults ("ivjs" "ivjs/main.ts")))

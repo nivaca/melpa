@@ -1,3 +1,3 @@
 (visible-mark
- :url "https://git.sr.ht/~iank/visible-mark"
- :fetcher git)
+ :fetcher codeberg
+ :repo "ideasman42/emacs-visible-mark")

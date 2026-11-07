@@ -1,0 +1,3 @@
+(daml-mode :fetcher github
+           :repo "bartfaitamas/daml-mode"
+           :files ("daml-mode.el"))

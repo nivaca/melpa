@@ -1,2 +1,1 @@
-(ansible-vault :fetcher github
-               :repo "zellio/ansible-vault-mode")
+(ansible-vault :fetcher github :repo "freehck/ansible-vault-mode")

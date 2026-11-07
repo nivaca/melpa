@@ -1,72 +1,56 @@
 -include config.mk
+include default.mk
 
-PKG = package-build
-
-ELS   = $(PKG).el
-ELS  += package-build-badges.el
-ELS  += package-recipe.el
-ELS  += package-recipe-mode.el
-ELCS  = $(ELS:.el=.elc)
-
-DEPS  =
-
-EMACS      ?= emacs
-EMACS_ARGS ?=
-
-LOAD_PATH  ?= $(addprefix -L ../,$(DEPS))
-LOAD_PATH  += -L .
+.PHONY: test
 
 all: lisp
 
 help:
-	$(info make [all|lisp]   - generate byte-code and autoloads)
-	$(info make clean        - remove generated files)
+	$(info make all     -- Build lisp)
+	$(info make lisp    -- Build lisp)
+	$(info make redo    -- Build lisp from scratch)
+	$(info make test    -- Run tests)
+	$(info make demo    -- Demo version generation)
+	$(info make clean   -- Remove built files)
 	@printf "\n"
 
-lisp: $(ELCS) loaddefs
+redo: clean $(ELCS) autoloads check-declare
+	@$(MAKE) -C test lisp
 
-loaddefs: $(PKG)-autoloads.el
+lisp: $(ELCS) autoloads check-declare
+	@$(MAKE) -C test lisp
+
+autoloads: $(PKG)-autoloads.el
 
 %.elc: %.el
 	@printf "Compiling $<\n"
-	@$(EMACS) -Q --batch \
-	--load eieio \
-	--eval "(put 'object-class-fast 'byte-obsolete-info nil)" \
-	--load eieio-compat \
-	--eval "(put 'defmethod 'byte-obsolete-info nil)" \
-	--eval "(put 'defgeneric 'byte-obsolete-info nil)" \
-	$(EMACS_ARGS) $(LOAD_PATH) -f batch-byte-compile $<
+	@$(EMACS_BATCH) --funcall batch-byte-compile $<
 
-CLEAN  = $(ELCS) $(PKG)-autoloads.el
+check-declare:
+	@printf " Checking function declarations\n"
+	@$(EMACS_BATCH) --eval "(check-declare-directory default-directory)"
+
+test:
+	@$(MAKE) -C test test
+
+demo:
+	@$(MAKE) -C test demo
+
+CLEAN = $(ELCS) $(PKG)-autoloads.el test/$(PKG)-tests.elc
 
 clean:
-	@printf "Cleaning...\n"
+	@printf " Cleaning...\n"
 	@rm -rf $(CLEAN)
 
-define LOADDEFS_TMPL
-;;; $(PKG)-autoloads.el --- automatically extracted autoloads
-;;
-;;; Code:
-(add-to-list 'load-path (directory-file-name \
-(or (file-name-directory #$$) (car load-path))))
-
-;; Local Variables:
-;; version-control: never
-;; no-byte-compile: t
-;; no-update-autoloads: t
-;; End:
-;;; $(PKG)-autoloads.el ends here
-endef
-export LOADDEFS_TMPL
-#'
-
 $(PKG)-autoloads.el: $(ELS)
-	@printf "Generating $@\n"
-	@printf "%s" "$$LOADDEFS_TMPL" > $@
-	@$(EMACS) -Q --batch --eval "(progn\
-	(setq make-backup-files nil)\
-	(setq vc-handled-backends nil)\
-	(setq default-directory (file-truename default-directory))\
-	(setq generated-autoload-file (expand-file-name \"$@\"))\
-	(setq find-file-visit-truename t)\
-	(update-directory-autoloads default-directory))"
+	@printf " Creating $@\n"
+	@$(EMACS_BATCH) --load autoload --eval "\
+(let* ((file (expand-file-name \"$@\"))\
+       (generated-autoload-file file)\
+       (coding-system-for-write 'utf-8-emacs-unix)\
+       (backup-inhibited t)\
+       (version-control 'never)\
+       (inhibit-message t))\
+  (write-region (autoload-rubric file \"package\" t) nil file)\
+  (update-directory-autoloads default-directory))" \
+	2>&1 | sed "/^Package autoload is deprecated$$/d"

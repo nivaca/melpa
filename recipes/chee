@@ -1,4 +1,4 @@
-(chee :repo "eikek/chee"
-      :fetcher github
-      :files ("emacs/*.el")
-      :version-regexp "release/\\(.*\\)")
+(chee
+ :fetcher github
+ :repo "eikek/chee"
+ :files ("emacs/*.el"))

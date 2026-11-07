@@ -1,1 +1,3 @@
-(buffer-sets :url "https://git.flintfam.org/swf-projects/buffer-sets.git" :fetcher git :files ("buffer-sets.el"))
+(buffer-sets
+ :fetcher sourcehut
+ :repo "swflint/buffer-sets")

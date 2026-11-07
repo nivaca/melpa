@@ -1,4 +1,5 @@
-(magit-section :fetcher github
-               :repo "magit/magit"
-               :files ("lisp/magit-section.el"
-                       "Documentation/magit-section.texi"))
+(magit-section
+ :fetcher github
+ :repo "magit/magit"
+ :files ("lisp/magit-section.el"
+         "docs/magit-section.texi"))

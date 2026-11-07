@@ -1,4 +1,4 @@
 (hiccup-cli
- :repo "kwrooijen/hiccup-cli"
  :fetcher github
- :files ("elisp/*.el" "elisp/*.el.in"))
+ :repo "kwrooijen/hiccup-cli"
+ :files ("elisp/*.el"))

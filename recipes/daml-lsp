@@ -1,0 +1,3 @@
+(daml-lsp :fetcher github
+          :repo "bartfaitamas/daml-mode"
+          :files ("daml-lsp.el"))

@@ -1,3 +1,4 @@
-(elfeed-web :repo "skeeto/elfeed"
-            :fetcher github
-            :files ("web/*"))
+(elfeed-web
+ :fetcher github
+ :repo "emacs-elfeed/elfeed-web"
+ :files (:defaults "*.html"))

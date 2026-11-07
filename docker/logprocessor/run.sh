@@ -1,16 +1,20 @@
 #!/bin/bash -e
 
-MELPA_REPO=/mnt/store/melpa
-cd "${MELPA_REPO}"
+THIS_DIR=$(dirname "$0")
+
+# TODO: switch output file name once tested & working
 
 # Unstable
-/usr/bin/python ${MELPA_REPO}/docker/logprocessor/process_log.py \
-  --db /mnt/db/download_log_full.db \
-  --jsondir html \
-  /mnt/store/log/melpa.access.log
+"$THIS_DIR/buildstats" /mnt/store/log /mnt/db/parquet html/download_counts.json
 
 # Stable
-/usr/bin/python ${MELPA_REPO}/docker/logprocessor/process_log.py \
-   --db /mnt/db/download_log_stable_full.db \
-   --jsondir html-stable \
-   /mnt/store/log-stable/melpa.access.log
+"$THIS_DIR/buildstats" /mnt/store/log-stable /mnt/db/parquet-stable html-stable/download_counts.json
+
+# Snapshots
+"$THIS_DIR/buildstats" /mnt/store/log-snapshots /mnt/db/parquet-snapshots html-snapshots/download_counts.json
+
+# Releases
+"$THIS_DIR/buildstats" /mnt/store/log-releases /mnt/db/parquet-releases html-releases/download_counts.json
+
+echo "Sleeping"
+sleep 1800

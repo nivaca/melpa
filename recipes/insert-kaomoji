@@ -1,2 +1,4 @@
-(insert-kaomoji :url "https://git.sr.ht/~zge/kaomoji" :fetcher git
-				:files (:defaults "KAOMOJIS"))
+(insert-kaomoji
+ :fetcher codeberg
+ :repo "pkal/insert-kaomoji.el"
+ :files (:defaults "KAOMOJIS"))

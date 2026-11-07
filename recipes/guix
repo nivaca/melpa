@@ -1,6 +1,6 @@
 (guix
- :fetcher github
- :repo "alezost/guix.el"
+ :fetcher codeberg
+ :repo "guix/emacs-guix"
  :files ("elisp/*.el"
          "doc/*.texi"
          ("images" "images/*.svg")
